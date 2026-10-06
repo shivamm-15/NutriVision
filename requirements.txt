@@ -1,3 +1,4 @@
+# NutriVision - Project dependencies
 tensorflow>=2.8.0  # Required for Keras .h5 model support
 keras>=2.8.0       # Required for Keras .h5 model support
 matplotlib
