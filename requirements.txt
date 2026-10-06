@@ -1,21 +1,8 @@
-# NutriVision - Project dependencies
-tensorflow>=2.8.0  # Required for Keras .h5 model support
-keras>=2.8.0       # Required for Keras .h5 model support
-matplotlib
-numpy
-opencv-python
-scikit-learn
-requests
-Pillow 
+--extra-index-url https://download.pytorch.org/whl/cpu
+streamlit
 torch
 torchvision
-torchaudio
-# For CUDA 12.x support, install with:
-# pip install torch torchvision torchaudio --index-url https://download.pytorch.org/whl/cu121
-
-# Other dependencies
-argparse 
-seaborn 
-tqdm 
-efficientnet_pytorch 
-plotly 
+plotly
+pandas
+numpy
+pillow
