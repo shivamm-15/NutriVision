@@ -1,3 +1,4 @@
+# NutriVision - MobileNet training metrics visualization
 import json
 import matplotlib.pyplot as plt
 

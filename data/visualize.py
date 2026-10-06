@@ -1,3 +1,4 @@
+# NutriVision - Food-101 dataset visualization utility
 import os
 import numpy as np
 import matplotlib.pyplot as plt

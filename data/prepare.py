@@ -1,3 +1,4 @@
+# NutriVision - Food-101 data preparation utility
 import os
 from collections import defaultdict
 from shutil import copy, copytree, rmtree

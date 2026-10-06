@@ -1,3 +1,4 @@
+# NutriVision - Food-101 model training pipeline
 import argparse
 import torch
 from torchvision import datasets, transforms, models
