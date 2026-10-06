@@ -1,230 +1,401 @@
-# Food Calorie Estimator 🍕🥗🍰
+# NutriVision 🍽️
 
-A modern web app for food image classification and calorie/macronutrient estimation using deep learning (MobileNetV3) and Streamlit. Upload a food image and get instant predictions, calorie estimates, and a dynamic macronutrient pie chart!
+**NutriVision** is a deep-learning powered food recognition and calorie estimation web application built with **Streamlit** and **PyTorch**.
 
----
-
-## 🎥 Demo Video
-
-See the app in action:
-
-![Food Calorie Estimator Demo](models/FoodCalorieEstimatorDemo.gif)
+The application can recognize both **Indian foods** and foods from the **Food-101 dataset**, then provide an estimated calorie value based on the predicted food and selected portion size.
 
 ---
 
-## 🎯 Project Overview
+## 🚀 Overview
 
-This project implements a food recognition system that classifies food images into 101 categories (Food-101 dataset) using a MobileNetV3-based deep learning model. The app provides calorie estimates and a dynamic breakdown of protein, fat, and carbohydrate calories per 100g serving. Built with PyTorch, TensorFlow/Keras, and Streamlit.
+NutriVision combines computer vision and nutrition estimation into a simple interactive application.
 
----
+Users can:
 
-## 🖼️ Result
+- 📷 Upload a food image
+- 🇮🇳 Recognize Indian foods using a dedicated Indian-food model
+- 🌎 Recognize foods from the Food-101 dataset
+- 🎯 View the predicted food and confidence score
+- 🔥 Estimate calories based on portion size
+- 📊 View available nutritional information
+- 📈 Track food entries through the application dashboard
 
-Below are sample result plots showing the model's accuracy during training and the confusion matrix:
-
-![MobileNet Accuracy Curve](models/mobilenet_accuracy_curve.png)
-
-![MobileNet Confusion Matrix](models/food101_mobilenet_MOBILENET_confusion_matrix.png)
-
----
-
-## 🚀 Live Demo
-
-Access the live Streamlit app here:  
-👉 [Food Calorie Estimator App](https://food-calories-estimator.streamlit.app/)
+The application provides **two separate recognition modes** because the Indian-food model is trained specifically on a limited set of Indian food categories, while the Food-101 model covers a broader collection of international foods.
 
 ---
 
-## 🧠 Features
+## ✨ Features
 
-**Core ML Features**
-- Deep Learning Model: MobileNetV3-Large, fine-tuned on Food-101 (101 classes)
-- Calorie & Macronutrient Estimation: Per 100g for each food class
-- Confidence Score: Shows model certainty for each prediction
+### 🇮🇳 Indian Food Recognition
 
-**Application Features**
-- Streamlit UI: Simple, interactive web interface
-- Image Upload: Supports JPG, JPEG, PNG
-- Dynamic Pie Chart: Interactive macronutrient breakdown (Plotly)
-- Robust Error Handling: Handles missing models, unknown foods, and more
+NutriVision includes a dedicated **MobileNetV3-Small** model trained for 15 Indian food categories:
 
-**Technical Features**
-- Model Persistence: Save/load trained models (.pt, .h5)
-- Cross-platform: Works on Windows, Mac, and Linux
-- Visualization: Training curves, confusion matrix, and more
+| # | Food |
+|---|------|
+| 1 | Biryani |
+| 2 | Chole Bhature |
+| 3 | Dabeli |
+| 4 | Dal |
+| 5 | Dhokla |
+| 6 | Dosa |
+| 7 | Jalebi |
+| 8 | Kathi Roll |
+| 9 | Kofta |
+| 10 | Naan |
+| 11 | Pakora |
+| 12 | Paneer |
+| 13 | Pani Puri |
+| 14 | Pav Bhaji |
+| 15 | Vada Pav |
+
+### 🌎 Food-101 Recognition
+
+The application also supports the **Food-101** dataset containing 101 food categories.
+
+Users can manually select:
+
+- **Indian Food**
+- **Global Food (Food-101)**
+
+This separation helps avoid treating every image as one of the 15 Indian-food classes.
+
+### 🔥 Calorie Estimation
+
+After identifying the food, NutriVision estimates calories based on:
+
+- Predicted food category
+- Approximate calories per 100 g
+- User-selected portion size
+
+> Calorie values are approximate estimates and should not be considered medical or dietary advice.
+
+### 📊 Nutrition Information
+
+Where nutritional data is available, the application can display information such as:
+
+- Calories
+- Protein
+- Fat
+- Carbohydrates
+
+Nutrition information is dependent on the available food data.
+
+### 🖥️ Interactive Streamlit Interface
+
+The application provides:
+
+- Image upload
+- Model selection
+- Prediction results
+- Confidence score
+- Portion-size controls
+- Calorie estimation
+- Nutrition information
+- Food logging/dashboard functionality
 
 ---
 
-## 📦 Installation & Setup
+## 🧠 Machine Learning
 
-**Prerequisites**
-- Python 3.8+
-- (Optional) CUDA GPU for faster inference
+### Indian Food Model
 
-**Quick Start**
+The Indian food classifier uses:
 
-1. **Clone the project:**
-   ```bash
-   git clone https://github.com/Ayush-Bitla/PRODIGY_ML_05.git
-   cd "Food Calorie Estimator"
-   ```
-2. **Create a virtual environment:**
-   ```bash
-   python -m venv .venv
-   ```
-3. **Activate the virtual environment:**
-   - Windows: `.venv\Scripts\activate`
-   - Mac/Linux: `source .venv/bin/activate`
-4. **Install dependencies:**
-   ```bash
-   pip install -r requirements.txt
-   ```
-5. **Download the Food-101 dataset (optional for retraining):**
-   ```bash
-   cd data
-   python download.py
-   ```
-6. **Run the app:**
-   ```bash
-   streamlit run app.py
-   ```
+**MobileNetV3-Small**
+
+with a custom classification layer for the 15 Indian food categories.
+
+The trained model is stored at:
+
+```text
+models/indian_food_mobilenet.pt
+```
+
+Class labels are stored at:
+
+```text
+models/indian_food_classes.json
+```
+
+### Food-101 Model
+
+The project also contains a MobileNet-based Food-101 model and associated training artifacts.
+
+The Food-101 model supports:
+
+**101 food categories**
+
+and is used for broader food recognition.
 
 ---
 
-## 🎮 How to Use
+## 🏗️ Application Architecture
 
-1. **Upload a food image** (JPG, JPEG, PNG)
-2. **View prediction:**
-   - Food class (e.g., "Pizza")
-   - Estimated calories per 100g
-   - Confidence score
-   - Interactive pie chart of protein, fat, and carbohydrate calories
+```text
+                 ┌─────────────────────┐
+                 │     User Image      │
+                 └──────────┬──────────┘
+                            │
+                            ▼
+                 ┌─────────────────────┐
+                 │   Streamlit App     │
+                 │      app.py         │
+                 └──────────┬──────────┘
+                            │
+                  ┌─────────┴─────────┐
+                  │                   │
+                  ▼                   ▼
+          ┌───────────────┐   ┌───────────────┐
+          │ Indian Food   │   │ Global Food   │
+          │ MobileNetV3   │   │   Food-101    │
+          └───────┬───────┘   └───────┬───────┘
+                  │                   │
+                  └─────────┬─────────┘
+                            ▼
+                 ┌─────────────────────┐
+                 │  Predicted Food +   │
+                 │    Confidence       │
+                 └──────────┬──────────┘
+                            │
+                            ▼
+                 ┌─────────────────────┐
+                 │ Calorie / Nutrition│
+                 │     Estimation      │
+                 └──────────┬──────────┘
+                            │
+                            ▼
+                 ┌─────────────────────┐
+                 │ Dashboard / Food Log│
+                 └─────────────────────┘
+```
 
 ---
 
-## 📊 Model Performance
+## 🛠️ Tech Stack
 
-- **Test Accuracy**: ~99.9% (on Food-101 test set)
-- **Model**: MobileNetV3-Large, custom classifier head
-- **Classes**: 101 food categories
-- **Training Time**: ~8 hours (GPU)
-- **Inference Time**: Instantaneous (on CPU/GPU)
+### Programming
 
-**Model Architecture**
-- Input Image (224x224x3)
-    ↓
-- MobileNetV3-Large backbone (pretrained on ImageNet)
-    ↓
-- Custom classifier head (Dropout, Dense layers)
-    ↓
-- Food class prediction
+- Python
+
+### Machine Learning
+
+- PyTorch
+- Torchvision
+- MobileNetV3
+- Scikit-learn
+
+### Application
+
+- Streamlit
+- Plotly
+
+### Image Processing
+
+- Pillow
+- NumPy
+
+### Data Processing
+
+- Pandas
 
 ---
 
 ## 📁 Project Structure
 
-```
-Food Calorie Estimator/
-├── app.py                      # Streamlit web app
-├── model/
-│   ├── train.py                # Model training script (PyTorch)
-│   ├── train_keras_food101tiny.py # Keras training script (optional)
-│   ├── predict.py              # Prediction utilities
-│   ├── plot_mobilenet_accuracy.py # Plotting training curves
-│   └── calorie_mapping.py      # Calorie/macronutrient data
-├── models/
-│   ├── MOBILENET_best_model_food101_mobilenet.pt  # Trained model (PyTorch)
-│   ├── my_trained_food101tiny_model.h5            # Trained model (Keras)
-│   ├── mobilenet_accuracy_curve.png               # Training accuracy curve
-│   ├── food101_mobilenet_MOBILENET_confusion_matrix.png # Confusion matrix
-│   ├── FoodCalorieEstimatorDemo.gif               # Demo GIF
-│   └── food101_mobilenet_MOBILENET_info.json      # Class names, metrics
+```text
+NutriVision/
+│
+├── app.py
+├── requirements.txt
+├── README.md
+├── LICENSE
+├── .gitignore
+│
 ├── data/
-│   ├── download.py             # Dataset download script
-│   ├── prepare.py              # Data preparation
-│   └── visualize.py            # Data visualization
-├── requirements.txt            # Python dependencies
-├── class_names.json            # Class names (legacy)
-├── Food 101 dataset/           # Food-101 dataset (train/test)
-├── img/                        # Sample images
-├── README.md                   # This file
-└── ...
+│   ├── download.py
+│   ├── prepare.py
+│   └── visualize.py
+│
+├── model/
+│   ├── train.py
+│   ├── predict.py
+│   ├── prepare_data.py
+│   ├── train_keras_food101tiny.py
+│   ├── plot_mobilenet_accuracy.py
+│   └── calorie_mapping.py
+│
+├── models/
+│   ├── MOBILENET_best_model_food101_mobilenet.pt
+│   ├── best_cpu_food101tiny_model.h5
+│   ├── best_food101tiny_model.h5
+│   ├── final_cpu_food101tiny_model.h5
+│   ├── my_trained_food101tiny_model.h5
+│   ├── indian_food_mobilenet.pt
+│   ├── indian_food_classes.json
+│   ├── food101_mobilenet_MOBILENET_info.json
+│   ├── mobilenet_accuracy_curve.png
+│   └── food101_mobilenet_MOBILENET_confusion_matrix.png
+│
+├── download_indian_dataset.py
+├── train_indian_food.py
+├── test_indian_food.py
+└── evaluate_indian_food.py
 ```
 
 ---
 
-## 🔧 Technical Details
+## ⚙️ Installation
 
-**Dependencies**
-- PyTorch: Deep learning framework (main model)
-- TensorFlow/Keras: For .h5 model support (optional)
-- Streamlit: Web app interface
-- Plotly: Interactive charts
-- OpenCV, Pillow: Image processing
-- NumPy, scikit-learn, matplotlib, seaborn: Data processing & visualization
+### 1. Clone the repository
 
-**Model Specifications**
-- Input Size: 224x224 RGB images
-- Classes: 101 food categories
-- Regularization: Dropout, BatchNormalization
-- Training: Adam optimizer, label smoothing, early stopping
+```bash
+git clone https://github.com/shivamm-15/NutriVision.git
+cd NutriVision
+```
 
----
+### 2. Create a virtual environment
 
-## 📋 Calorie & Macronutrient Mapping
+```bash
+python -m venv .venv
+```
 
-| Food Class         | Calories (per 100g) | Protein (g) | Fat (g) | Carbs (g) |
-|--------------------|---------------------|-------------|---------|-----------|
-| apple_pie          | 296                 | 2.1         | 14.0    | 41.0      |
-| beef_carpaccio     | 120                 | 20.0        | 4.0     | 0.0       |
-| bibimbap           | 112                 | 3.0         | 2.0     | 22.0      |
-| cup_cakes          | 305                 | 3.6         | 12.0    | 46.0      |
-| foie_gras          | 462                 | 7.0         | 43.0    | 2.0       |
-| french_fries       | 312                 | 3.4         | 15.0    | 41.0      |
-| garlic_bread       | 350                 | 7.0         | 17.0    | 44.0      |
-| pizza              | 266                 | 11.0        | 10.0    | 33.0      |
-| spring_rolls       | 154                 | 3.0         | 5.0     | 24.0      |
-| spaghetti_carbonara| 380                 | 13.0        | 17.0    | 44.0      |
-| strawberry_shortcake| 250                | 3.0         | 10.0    | 40.0      |
-| omelette           | 154                 | 10.0        | 12.0    | 1.0       |
-| ...                | ...                 | ...         | ...     | ...       |
+### 3. Activate the environment
 
----
+**Windows:**
 
-## 🐛 Troubleshooting
+```powershell
+.venv\Scripts\activate
+```
 
-**Common Issues**
-- "No module named 'streamlit'":  
-  Install with `pip install streamlit`
-- Model loading error:  
-  Ensure model files exist in the `models/` directory
-- Low accuracy:  
-  Retrain the model or check input image quality
+**macOS/Linux:**
 
-**Performance Tips**
-- Use a GPU for faster training/inference
-- Ensure good lighting and clear images for best results
+```bash
+source .venv/bin/activate
+```
+
+### 4. Install dependencies
+
+```bash
+pip install -r requirements.txt
+```
 
 ---
 
-## 🤝 Contributing
+## ▶️ Run the Application
 
-Feel free to contribute to this project by:
-- Reporting bugs
-- Suggesting new features
-- Improving the model architecture
-- Adding new food classes or calorie mappings
+Start the Streamlit application:
 
----
+```bash
+streamlit run app.py
+```
 
-## 📝 License
-
-This project is open source and available under the MIT License.
+The application will open in your browser.
 
 ---
 
-## 🙏 Acknowledgments
+## 🧪 Model Evaluation
 
-- **Dataset**: [Food-101](https://www.kaggle.com/datasets/jayaprakashpondy/food-101-dataset)
-- **Model Inspiration**: MobileNetV3, PyTorch community
-- **UI**: Streamlit, Plotly 
+The repository contains scripts for testing and evaluating the Indian food classifier.
+
+### Test a single image
+
+```bash
+python test_indian_food.py
+```
+
+### Evaluate the Indian food model
+
+```bash
+python evaluate_indian_food.py
+```
+
+### Train the Indian food model
+
+```bash
+python train_indian_food.py
+```
+
+> Model performance should be evaluated on a proper held-out test set. Accuracy numbers are intentionally not listed here until they have been independently verified using the final evaluation pipeline.
+
+---
+
+## 🍛 Calorie Estimation
+
+NutriVision uses approximate calorie values associated with recognized food categories.
+
+Examples include:
+
+| Food | Approx. Calories |
+|------|------------------|
+| Biryani | 198 kcal / 100 g |
+| Dosa | 168 kcal / 100 g |
+| Jalebi | 380 kcal / 100 g |
+| Naan | 260 kcal / 100 g |
+| Paneer | 265 kcal / 100 g |
+| Pav Bhaji | 150 kcal / 100 g |
+| Vada Pav | 290 kcal / 100 g |
+
+These values are intended for **approximate estimation only**. Actual calories can vary significantly depending on ingredients, recipe, cooking method, oil, serving size, and preparation.
+
+---
+
+## ⚠️ Limitations
+
+NutriVision is a machine-learning demonstration and has several limitations:
+
+- Image classification is not guaranteed to be correct.
+- The Indian model only supports its 15 trained food categories.
+- The model may perform poorly on images that differ significantly from its training data.
+- Similar-looking foods can be confused.
+- Calorie values are approximate.
+- Portion-size estimation is not performed directly from the image.
+- Nutritional information may not be available for every food category.
+- The application should not be used as a substitute for professional nutritional or medical advice.
+
+---
+
+## 🔮 Future Improvements
+
+Potential improvements include:
+
+- Automatic Indian-vs-global food detection
+- Larger Indian food dataset
+- More Indian food categories
+- Improved out-of-distribution detection
+- Better portion-size estimation using computer vision
+- More accurate nutrition databases
+- Per-image nutritional analysis
+- Cloud deployment optimization
+- Model quantization for faster inference
+- Mobile application
+- User accounts and persistent food history
+- Improved model evaluation and benchmarking
+
+---
+
+## 📌 Dataset
+
+The project uses food image datasets for training and evaluation, including:
+
+- **Food-101** for global food recognition
+- An Indian food dataset for the dedicated Indian food classifier
+
+Dataset files are intentionally excluded from the Git repository where appropriate because of their size.
+
+---
+
+## 📜 License
+
+This project is distributed under the license included in the repository.
+
+---
+
+## 👨‍💻 Project
+
+**NutriVision**
+
+A computer-vision based food recognition and calorie estimation application built using Python, PyTorch, MobileNetV3, and Streamlit.
+
+---
+
+⭐ If you find the project useful, consider giving the repository a star.
