@@ -116,6 +116,29 @@ MACRO_DICT = {
     "omelette":             {"protein": 10.0, "fat": 12.0, "carbs": 1.0},
 }
 
+# Indian foods: approximate macros per 100 g, chosen to stay consistent with
+# INDIAN_CALORIE_DICT above (protein*4 + fat*9 + carbs*4 ~= kcal).
+# These are estimates; verify against IFCT 2017 / USDA FoodData Central and
+# cite the source you use. Recipes (oil, sugar, filling) vary a lot.
+INDIAN_MACRO_DICT = {
+    "biryani":       {"protein": 7.0,  "fat": 7.0,  "carbs": 27.0},
+    "chole_bhature": {"protein": 7.0,  "fat": 14.0, "carbs": 36.0},
+    "dabeli":        {"protein": 5.0,  "fat": 7.0,  "carbs": 29.0},
+    "dal":           {"protein": 7.0,  "fat": 3.0,  "carbs": 16.5},
+    "dhokla":        {"protein": 6.0,  "fat": 5.0,  "carbs": 22.0},
+    "dosa":          {"protein": 4.0,  "fat": 4.0,  "carbs": 29.0},
+    "jalebi":        {"protein": 2.0,  "fat": 12.0, "carbs": 66.0},
+    "kathi_roll":    {"protein": 8.0,  "fat": 10.0, "carbs": 31.0},
+    "kofta":         {"protein": 9.0,  "fat": 13.0, "carbs": 12.0},
+    "naan":          {"protein": 9.0,  "fat": 5.0,  "carbs": 46.0},
+    "pakora":        {"protein": 7.0,  "fat": 18.0, "carbs": 22.0},
+    "paneer":        {"protein": 18.0, "fat": 20.0, "carbs": 3.0},
+    "pani_puri":     {"protein": 3.0,  "fat": 4.0,  "carbs": 25.0},
+    "pav_bhaji":     {"protein": 4.0,  "fat": 5.0,  "carbs": 22.0},
+    "vada_pav":      {"protein": 7.0,  "fat": 11.0, "carbs": 41.0},
+}
+MACRO_DICT.update(INDIAN_MACRO_DICT)
+
 
 # ============================================================
 # MODELS
@@ -165,6 +188,14 @@ def get_device():
     return torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
 
+def safe_torch_load(path, device):
+    """Prefer weights_only=True (safer); fall back if the checkpoint needs full unpickling."""
+    try:
+        return torch.load(path, map_location=device, weights_only=True)
+    except Exception:
+        return torch.load(path, map_location=device)
+
+
 def extract_state_dict(loaded):
     if isinstance(loaded, dict) and "model_state_dict" in loaded:
         return loaded["model_state_dict"]
@@ -178,7 +209,7 @@ def load_food101_model():
         raise FileNotFoundError(f"Model file not found: {FOOD101_MODEL_PATH}")
 
     model = MobileNetFood101Model(n_classes=len(FOOD101_CLASS_NAMES))
-    loaded = torch.load(FOOD101_MODEL_PATH, map_location=device)
+    loaded = safe_torch_load(FOOD101_MODEL_PATH, device)
     model.load_state_dict(extract_state_dict(loaded))
     model.to(device).eval()
     return model, device
@@ -191,7 +222,7 @@ def load_indian_model():
         raise FileNotFoundError(f"Model file not found: {INDIAN_MODEL_PATH}")
 
     model = IndianFoodMobileNetModel(n_classes=len(INDIAN_CLASS_NAMES))
-    state = extract_state_dict(torch.load(INDIAN_MODEL_PATH, map_location=device))
+    state = extract_state_dict(safe_torch_load(INDIAN_MODEL_PATH, device))
 
     try:
         model.load_state_dict(state)          # keys saved as "model.features...."
@@ -237,6 +268,15 @@ def get_calories(class_name):
     squashed = normalized.replace("_", "")
     for key, value in CALORIE_DICT.items():
         if key.lower().replace("_", "").replace(" ", "") == squashed:
+            return value
+    return None
+
+
+def get_macros(class_name):
+    """Match class names like 'cholebhature' to 'chole_bhature' (ignores '_' and spaces)."""
+    squashed = class_name.lower().replace(" ", "").replace("_", "")
+    for key, value in MACRO_DICT.items():
+        if key.lower().replace("_", "") == squashed:
             return value
     return None
 
@@ -354,7 +394,7 @@ if uploaded_file is not None:
             st.caption(f"{calories} kcal per 100 g × {weight} g")
 
             # ---------------- Macros ----------------
-            macros = MACRO_DICT.get(class_name)
+            macros = get_macros(class_name)
             protein_value = fat_value = carbs_value = None
 
             if macros:
