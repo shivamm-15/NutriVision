@@ -3,7 +3,7 @@
 Food recognition and calorie estimation for Indian and global foods, built with PyTorch and Streamlit.
 
 <!-- TODO: add a screenshot or GIF of the app (Indian mode with the macro pie chart) -->
-![NutriVision screenshot](assets/screenshot.png)
+URL-https://nutrivision-mrsc2d8hsuteg5z9xwsrg7.streamlit.app/
 
 <!-- TODO: after deploying, add: **[Live demo](YOUR_STREAMLIT_URL)** -->
 
