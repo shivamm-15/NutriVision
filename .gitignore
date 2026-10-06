@@ -1,44 +1,28 @@
-# Byte-compiled / optimized / DLL files
+# Python
 __pycache__/
 *.py[cod]
-*$py.class
+*.pyo
 
 # Virtual environment
 .venv/
 venv/
-ENV/
+env/
 
-# Dataset folders
-food-101/
-Food 101 dataset/
-train/
-test/
-train_mini/
-test_mini/
+# Datasets
+indian_food_dataset/
+dataset/
+data/
 
-img/
-
-# Model checkpoints and outputs (keep only main MobileNet model)
-models/*.pt
-!models/MOBILENET_best_model_food101_mobilenet.pt
-models/*.png
-!models/mobilenet_accuracy_curve.png
-!models/food101_mobilenet_MOBILENET_confusion_matrix.png
-models/*.json
-!models/food101_mobilenet_MOBILENET_info.json
-
-# Jupyter Notebook checkpoints
+# Jupyter
 .ipynb_checkpoints/
 
-# OS files
+# Streamlit secrets
+.streamlit/secrets.toml
+
+# OS
 .DS_Store
 Thumbs.db
 
-# Streamlit cache
-.streamlit/
-
-# Logs
-*.log
-
-# Kaggle API key
-kaggle.json 
+# IDE
+.vscode/
+.idea/
