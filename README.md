@@ -20,7 +20,7 @@ URL-https://nutrivision-mrsc2d8hsuteg5z9xwsrg7.streamlit.app/
 
 | Model | Classes | Test accuracy |
 |---|---|---|
-| Indian food (MobileNetV3-Small) | 15 | XX.X% |
+| Indian food (MobileNetV3-Small) | 15 | 97.85% |
 
 <!-- TODO: replace XX.X% with your measured accuracy on a held-out test set. Delete this table if you have not measured it yet. -->
 
